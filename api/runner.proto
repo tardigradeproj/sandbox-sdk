@@ -1,0 +1,227 @@
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/tardigradeproj/sandbox-sdk/pkg/api;api";
+
+message PTY {
+  required uint32 cols = 1;
+  required uint32 rows = 2;
+}
+
+message ProcessConfig {
+  repeated string command = 1;
+  map<string, string> env_vars = 2;
+  optional string cwd = 3;
+}
+
+message ExecRequest {
+  required ProcessConfig config = 1;
+  optional PTY pty = 2;
+}
+
+message InitEvent {
+  required int32 process_id = 1;
+}
+
+message ExitEvent {
+  required int32 exit_code = 1;
+}
+
+message AsyncExecResponse {
+    optional InitEvent init = 1;
+    optional bytes stdout = 2;
+    optional bytes stderr = 3;
+    optional ExitEvent exit = 4;
+}
+
+// ExecuteResponse contains the complete output of a synchronously executed command.
+message SyncExecResponse {
+  // Process exit code (0 indicates success).
+  required int32 exit_code = 1;
+  // Combined standard output buffer produced during execution.
+  required bytes stdout = 2;
+  // Combined standard error buffer produced during execution.
+  required  bytes stderr = 3;
+}
+
+enum Signal {
+  SIGNAL_UNSPECIFIED = 0;
+  SIGNAL_SIGINT      = 2;
+  SIGNAL_SIGKILL     = 9;
+  SIGNAL_SIGTERM     = 15;
+}
+
+message SendSignalRequest {
+  required int32 process_id = 1;
+  required Signal signal = 2;
+}
+
+message SendSignalResponse {
+}
+message WriteStdinRequest {
+  required int32 process_id = 1;
+  oneof payload {
+    bytes input = 2;
+    google.protobuf.Empty eof = 3;
+  }
+}
+message WriteStdinResponse {
+}
+
+message UploadFileChunk {
+  required string path = 1;
+  required bytes content = 2;
+  optional uint32 mode = 3;
+}
+
+message UploadFileResponse {
+}
+
+message DownloadFileRequest {
+  required string path = 1;
+}
+
+message DownloadFileChunk {
+  required bytes content = 1;
+}
+
+message ListFilesRequest {
+  required string path = 1;
+}
+
+message FileInfo {
+  required string path = 1;
+  required uint64 size = 2;
+  required bool is_dir = 3;
+  optional uint32 mode = 4;
+}
+
+message ListFilesResponse {
+  repeated FileInfo entries = 1;
+}
+
+message RemoveFileRequest {
+  required string path = 1;
+  optional bool recursive = 2;
+}
+
+message RemoveFileResponse {
+}
+
+service Runner {
+  rpc Exec(ExecRequest) returns (stream AsyncExecResponse);
+  rpc SendSignal(SendSignalRequest) returns (SendSignalResponse);
+  rpc WriteStdin(WriteStdinRequest) returns (WriteStdinResponse);
+  rpc UploadFile(stream UploadFileChunk) returns (UploadFileResponse);
+  rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileChunk);
+  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse);
+  rpc RemoveFile(RemoveFileRequest) returns (RemoveFileResponse);
+}
+
+message ResourceLimits {
+  required string cpu = 1;
+  required int32 memory_in_mbs = 2;
+  optional int32 storage_in_mbs = 3;
+  optional int32 network_bandwidth_in_mbps = 4;
+}
+
+enum InstanceType {
+  INSTANCE_TYPE_UNSPECIFIED = 0;
+  INSTANCE_TYPE_MICRO       = 1;
+  INSTANCE_TYPE_SMALL       = 2;
+  INSTANCE_TYPE_MEDIUM      = 3;
+  INSTANCE_TYPE_LARGE       = 4;
+  INSTANCE_TYPE_XLARGE      = 5;
+}
+
+message NetworkSettings {
+  optional bool enable_internet = 1;
+  repeated string allowed_egress_cidrs = 2;
+}
+
+message SandboxSpec {
+  required string template_id = 1;
+  optional string cwd = 2;
+  map<string, string> tags = 4;
+  map<string, string> env_vars = 5;
+  optional uint32 auto_delete_after_seconds = 7;
+  optional string region = 9;
+  optional NetworkSettings network = 10;
+  oneof compute {
+    ResourceLimits resources = 6;
+    InstanceType instance_type = 8;
+  }
+}
+
+enum SandboxState {
+  SANDBOX_STATE_UNSPECIFIED = 0;
+  SANDBOX_STATE_PENDING     = 1;
+  SANDBOX_STATE_RUNNING     = 2;
+  SANDBOX_STATE_TERMINATING = 3;
+  SANDBOX_STATE_TERMINATED  = 4;
+  SANDBOX_STATE_FAILED      = 5;
+  SANDBOX_STATE_PAUSED      = 6;
+}
+
+message Sandbox {
+  required string sandbox_id = 1;
+  required SandboxState state = 2;
+  required SandboxSpec spec = 3;
+  required int64 created_at = 4;
+}
+
+message CreateSandboxRequest {
+  required SandboxSpec spec = 1;
+}
+
+message CreateSandboxResponse {
+  required Sandbox sandbox = 1;
+}
+
+message GetSandboxRequest {
+  required string sandbox_id = 1;
+}
+
+message GetSandboxResponse {
+  required Sandbox sandbox = 1;
+}
+
+message ListSandboxesRequest {
+  optional uint32 page_size = 1;
+  optional string page_token = 2;
+  map<string, string> label_selector = 3;
+}
+
+message ListSandboxesResponse {
+  repeated Sandbox sandboxes = 1;
+  optional string next_page_token = 2;
+}
+
+message DeleteSandboxRequest {
+  required string sandbox_id = 1;
+}
+
+message DeleteSandboxResponse {
+}
+
+message PauseSandboxRequest {
+  required string sandbox_id = 1;
+}
+
+message PauseSandboxResponse {
+}
+
+message ResumeSandboxRequest {
+  required string sandbox_id = 1;
+}
+
+message ResumeSandboxResponse {
+}
+
+service Management {
+  rpc CreateSandbox(CreateSandboxRequest) returns (CreateSandboxResponse);
+  rpc GetSandbox(GetSandboxRequest) returns (GetSandboxResponse);
+  rpc ListSandboxes(ListSandboxesRequest) returns (ListSandboxesResponse);
+  rpc DeleteSandbox(DeleteSandboxRequest) returns (DeleteSandboxResponse);
+  rpc PauseSandbox(PauseSandboxRequest) returns (PauseSandboxResponse);
+  rpc ResumeSandbox(ResumeSandboxRequest) returns (ResumeSandboxResponse);
+}

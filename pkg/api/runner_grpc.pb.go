@@ -349,22 +349,30 @@ var Runner_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Management_CreateSandbox_FullMethodName = "/Management/CreateSandbox"
-	Management_GetSandbox_FullMethodName    = "/Management/GetSandbox"
-	Management_ListSandboxes_FullMethodName = "/Management/ListSandboxes"
-	Management_DeleteSandbox_FullMethodName = "/Management/DeleteSandbox"
-	Management_PauseSandbox_FullMethodName  = "/Management/PauseSandbox"
-	Management_ResumeSandbox_FullMethodName = "/Management/ResumeSandbox"
+	Management_CreateProfile_FullMethodName  = "/Management/CreateProfile"
+	Management_GetProfile_FullMethodName     = "/Management/GetProfile"
+	Management_ListProfiles_FullMethodName   = "/Management/ListProfiles"
+	Management_DeleteProfile_FullMethodName  = "/Management/DeleteProfile"
+	Management_ClaimSandbox_FullMethodName   = "/Management/ClaimSandbox"
+	Management_GetSandbox_FullMethodName     = "/Management/GetSandbox"
+	Management_ListSandboxes_FullMethodName  = "/Management/ListSandboxes"
+	Management_ReleaseSandbox_FullMethodName = "/Management/ReleaseSandbox"
+	Management_PauseSandbox_FullMethodName   = "/Management/PauseSandbox"
+	Management_ResumeSandbox_FullMethodName  = "/Management/ResumeSandbox"
 )
 
 // ManagementClient is the client API for Management service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ManagementClient interface {
-	CreateSandbox(ctx context.Context, in *CreateSandboxRequest, opts ...grpc.CallOption) (*CreateSandboxResponse, error)
+	CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*CreateProfileResponse, error)
+	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
+	ListProfiles(ctx context.Context, in *ListProfilesRequest, opts ...grpc.CallOption) (*ListProfilesResponse, error)
+	DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*DeleteProfileResponse, error)
+	ClaimSandbox(ctx context.Context, in *ClaimSandboxRequest, opts ...grpc.CallOption) (*ClaimSandboxResponse, error)
 	GetSandbox(ctx context.Context, in *GetSandboxRequest, opts ...grpc.CallOption) (*GetSandboxResponse, error)
 	ListSandboxes(ctx context.Context, in *ListSandboxesRequest, opts ...grpc.CallOption) (*ListSandboxesResponse, error)
-	DeleteSandbox(ctx context.Context, in *DeleteSandboxRequest, opts ...grpc.CallOption) (*DeleteSandboxResponse, error)
+	ReleaseSandbox(ctx context.Context, in *ReleaseSandboxRequest, opts ...grpc.CallOption) (*ReleaseSandboxResponse, error)
 	PauseSandbox(ctx context.Context, in *PauseSandboxRequest, opts ...grpc.CallOption) (*PauseSandboxResponse, error)
 	ResumeSandbox(ctx context.Context, in *ResumeSandboxRequest, opts ...grpc.CallOption) (*ResumeSandboxResponse, error)
 }
@@ -377,10 +385,50 @@ func NewManagementClient(cc grpc.ClientConnInterface) ManagementClient {
 	return &managementClient{cc}
 }
 
-func (c *managementClient) CreateSandbox(ctx context.Context, in *CreateSandboxRequest, opts ...grpc.CallOption) (*CreateSandboxResponse, error) {
+func (c *managementClient) CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*CreateProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateSandboxResponse)
-	err := c.cc.Invoke(ctx, Management_CreateSandbox_FullMethodName, in, out, cOpts...)
+	out := new(CreateProfileResponse)
+	err := c.cc.Invoke(ctx, Management_CreateProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProfileResponse)
+	err := c.cc.Invoke(ctx, Management_GetProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) ListProfiles(ctx context.Context, in *ListProfilesRequest, opts ...grpc.CallOption) (*ListProfilesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProfilesResponse)
+	err := c.cc.Invoke(ctx, Management_ListProfiles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*DeleteProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteProfileResponse)
+	err := c.cc.Invoke(ctx, Management_DeleteProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) ClaimSandbox(ctx context.Context, in *ClaimSandboxRequest, opts ...grpc.CallOption) (*ClaimSandboxResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClaimSandboxResponse)
+	err := c.cc.Invoke(ctx, Management_ClaimSandbox_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -407,10 +455,10 @@ func (c *managementClient) ListSandboxes(ctx context.Context, in *ListSandboxesR
 	return out, nil
 }
 
-func (c *managementClient) DeleteSandbox(ctx context.Context, in *DeleteSandboxRequest, opts ...grpc.CallOption) (*DeleteSandboxResponse, error) {
+func (c *managementClient) ReleaseSandbox(ctx context.Context, in *ReleaseSandboxRequest, opts ...grpc.CallOption) (*ReleaseSandboxResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteSandboxResponse)
-	err := c.cc.Invoke(ctx, Management_DeleteSandbox_FullMethodName, in, out, cOpts...)
+	out := new(ReleaseSandboxResponse)
+	err := c.cc.Invoke(ctx, Management_ReleaseSandbox_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -441,10 +489,14 @@ func (c *managementClient) ResumeSandbox(ctx context.Context, in *ResumeSandboxR
 // All implementations must embed UnimplementedManagementServer
 // for forward compatibility.
 type ManagementServer interface {
-	CreateSandbox(context.Context, *CreateSandboxRequest) (*CreateSandboxResponse, error)
+	CreateProfile(context.Context, *CreateProfileRequest) (*CreateProfileResponse, error)
+	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
+	ListProfiles(context.Context, *ListProfilesRequest) (*ListProfilesResponse, error)
+	DeleteProfile(context.Context, *DeleteProfileRequest) (*DeleteProfileResponse, error)
+	ClaimSandbox(context.Context, *ClaimSandboxRequest) (*ClaimSandboxResponse, error)
 	GetSandbox(context.Context, *GetSandboxRequest) (*GetSandboxResponse, error)
 	ListSandboxes(context.Context, *ListSandboxesRequest) (*ListSandboxesResponse, error)
-	DeleteSandbox(context.Context, *DeleteSandboxRequest) (*DeleteSandboxResponse, error)
+	ReleaseSandbox(context.Context, *ReleaseSandboxRequest) (*ReleaseSandboxResponse, error)
 	PauseSandbox(context.Context, *PauseSandboxRequest) (*PauseSandboxResponse, error)
 	ResumeSandbox(context.Context, *ResumeSandboxRequest) (*ResumeSandboxResponse, error)
 	mustEmbedUnimplementedManagementServer()
@@ -457,8 +509,20 @@ type ManagementServer interface {
 // pointer dereference when methods are called.
 type UnimplementedManagementServer struct{}
 
-func (UnimplementedManagementServer) CreateSandbox(context.Context, *CreateSandboxRequest) (*CreateSandboxResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateSandbox not implemented")
+func (UnimplementedManagementServer) CreateProfile(context.Context, *CreateProfileRequest) (*CreateProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateProfile not implemented")
+}
+func (UnimplementedManagementServer) GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetProfile not implemented")
+}
+func (UnimplementedManagementServer) ListProfiles(context.Context, *ListProfilesRequest) (*ListProfilesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListProfiles not implemented")
+}
+func (UnimplementedManagementServer) DeleteProfile(context.Context, *DeleteProfileRequest) (*DeleteProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteProfile not implemented")
+}
+func (UnimplementedManagementServer) ClaimSandbox(context.Context, *ClaimSandboxRequest) (*ClaimSandboxResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClaimSandbox not implemented")
 }
 func (UnimplementedManagementServer) GetSandbox(context.Context, *GetSandboxRequest) (*GetSandboxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSandbox not implemented")
@@ -466,8 +530,8 @@ func (UnimplementedManagementServer) GetSandbox(context.Context, *GetSandboxRequ
 func (UnimplementedManagementServer) ListSandboxes(context.Context, *ListSandboxesRequest) (*ListSandboxesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSandboxes not implemented")
 }
-func (UnimplementedManagementServer) DeleteSandbox(context.Context, *DeleteSandboxRequest) (*DeleteSandboxResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteSandbox not implemented")
+func (UnimplementedManagementServer) ReleaseSandbox(context.Context, *ReleaseSandboxRequest) (*ReleaseSandboxResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReleaseSandbox not implemented")
 }
 func (UnimplementedManagementServer) PauseSandbox(context.Context, *PauseSandboxRequest) (*PauseSandboxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method PauseSandbox not implemented")
@@ -496,20 +560,92 @@ func RegisterManagementServer(s grpc.ServiceRegistrar, srv ManagementServer) {
 	s.RegisterService(&Management_ServiceDesc, srv)
 }
 
-func _Management_CreateSandbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateSandboxRequest)
+func _Management_CreateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).CreateSandbox(ctx, in)
+		return srv.(ManagementServer).CreateProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Management_CreateSandbox_FullMethodName,
+		FullMethod: Management_CreateProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).CreateSandbox(ctx, req.(*CreateSandboxRequest))
+		return srv.(ManagementServer).CreateProfile(ctx, req.(*CreateProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).GetProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Management_GetProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).GetProfile(ctx, req.(*GetProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_ListProfiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProfilesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).ListProfiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Management_ListProfiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).ListProfiles(ctx, req.(*ListProfilesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_DeleteProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).DeleteProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Management_DeleteProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).DeleteProfile(ctx, req.(*DeleteProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_ClaimSandbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClaimSandboxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).ClaimSandbox(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Management_ClaimSandbox_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).ClaimSandbox(ctx, req.(*ClaimSandboxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -550,20 +686,20 @@ func _Management_ListSandboxes_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_DeleteSandbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteSandboxRequest)
+func _Management_ReleaseSandbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReleaseSandboxRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).DeleteSandbox(ctx, in)
+		return srv.(ManagementServer).ReleaseSandbox(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Management_DeleteSandbox_FullMethodName,
+		FullMethod: Management_ReleaseSandbox_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).DeleteSandbox(ctx, req.(*DeleteSandboxRequest))
+		return srv.(ManagementServer).ReleaseSandbox(ctx, req.(*ReleaseSandboxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -612,8 +748,24 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ManagementServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateSandbox",
-			Handler:    _Management_CreateSandbox_Handler,
+			MethodName: "CreateProfile",
+			Handler:    _Management_CreateProfile_Handler,
+		},
+		{
+			MethodName: "GetProfile",
+			Handler:    _Management_GetProfile_Handler,
+		},
+		{
+			MethodName: "ListProfiles",
+			Handler:    _Management_ListProfiles_Handler,
+		},
+		{
+			MethodName: "DeleteProfile",
+			Handler:    _Management_DeleteProfile_Handler,
+		},
+		{
+			MethodName: "ClaimSandbox",
+			Handler:    _Management_ClaimSandbox_Handler,
 		},
 		{
 			MethodName: "GetSandbox",
@@ -624,8 +776,8 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Management_ListSandboxes_Handler,
 		},
 		{
-			MethodName: "DeleteSandbox",
-			Handler:    _Management_DeleteSandbox_Handler,
+			MethodName: "ReleaseSandbox",
+			Handler:    _Management_ReleaseSandbox_Handler,
 		},
 		{
 			MethodName: "PauseSandbox",

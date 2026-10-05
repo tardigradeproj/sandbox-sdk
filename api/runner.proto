@@ -2,6 +2,7 @@ import "google/protobuf/empty.proto";
 
 option go_package = "github.com/tardigradeproj/sandbox-sdk/pkg/api;api";
 
+
 message PTY {
   required uint32 cols = 1;
   required uint32 rows = 2;
@@ -27,10 +28,10 @@ message ExitEvent {
 }
 
 message AsyncExecResponse {
-    optional InitEvent init = 1;
-    optional bytes stdout = 2;
-    optional bytes stderr = 3;
-    optional ExitEvent exit = 4;
+  optional InitEvent init = 1;
+  optional bytes stdout = 2;
+  optional bytes stderr = 3;
+  optional ExitEvent exit = 4;
 }
 
 // ExecuteResponse contains the complete output of a synchronously executed command.
@@ -138,7 +139,10 @@ message NetworkSettings {
   repeated string allowed_egress_cidrs = 2;
 }
 
-message SandboxSpec {
+// SandboxProfileSpec is the blueprint for a sandbox: every trait needed to
+// produce one, plus the pool-sizing knobs that control how many warm
+// instances of it are kept ready.
+message SandboxProfileSpec {
   required string template_id = 1;
   optional string cwd = 2;
   map<string, string> tags = 4;
@@ -150,6 +154,54 @@ message SandboxSpec {
     ResourceLimits resources = 6;
     InstanceType instance_type = 8;
   }
+  // ahead_concurrency is the warm pool size: how many instances of this
+  // profile are kept pre-booted to avoid cold starts.
+  optional uint32 ahead_concurrency = 11;
+  // concurrency_limit caps how many sandboxes of this profile may be
+  // claimed and running at the same time.
+  optional uint32 concurrency_limit = 12;
+}
+
+// SandboxProfile is a created, addressable SandboxProfileSpec. Sandboxes are
+// always claimed against a profile_id, never against a raw spec.
+message SandboxProfile {
+  required string profile_id = 1;
+  required SandboxProfileSpec spec = 2;
+  required int64 created_at = 3;
+}
+
+message CreateProfileRequest {
+  required SandboxProfileSpec spec = 1;
+}
+
+message CreateProfileResponse {
+  required SandboxProfile profile = 1;
+}
+
+message GetProfileRequest {
+  required string profile_id = 1;
+}
+
+message GetProfileResponse {
+  required SandboxProfile profile = 1;
+}
+
+message ListProfilesRequest {
+  optional uint32 page_size = 1;
+  optional string page_token = 2;
+  map<string, string> label_selector = 3;
+}
+
+message ListProfilesResponse {
+  repeated SandboxProfile profiles = 1;
+  optional string next_page_token = 2;
+}
+
+message DeleteProfileRequest {
+  required string profile_id = 1;
+}
+
+message DeleteProfileResponse {
 }
 
 enum SandboxState {
@@ -165,15 +217,22 @@ enum SandboxState {
 message Sandbox {
   required string sandbox_id = 1;
   required SandboxState state = 2;
-  required SandboxSpec spec = 3;
+  required string profile_id = 3;
   required int64 created_at = 4;
 }
 
-message CreateSandboxRequest {
-  required SandboxSpec spec = 1;
+// ClaimSandboxRequest claims a sandbox. The profile can already exist
+// (claim by profile_id, the ahead-of-time path) or be created on demand by
+// supplying its spec inline — either way the result is a sandbox bound to a
+// profile.
+message ClaimSandboxRequest {
+  oneof target {
+    string profile_id = 1;
+    SandboxProfileSpec profile = 2;
+  }
 }
 
-message CreateSandboxResponse {
+message ClaimSandboxResponse {
   required Sandbox sandbox = 1;
 }
 
@@ -189,6 +248,7 @@ message ListSandboxesRequest {
   optional uint32 page_size = 1;
   optional string page_token = 2;
   map<string, string> label_selector = 3;
+  optional string profile_id = 4;
 }
 
 message ListSandboxesResponse {
@@ -196,11 +256,11 @@ message ListSandboxesResponse {
   optional string next_page_token = 2;
 }
 
-message DeleteSandboxRequest {
+message ReleaseSandboxRequest {
   required string sandbox_id = 1;
 }
 
-message DeleteSandboxResponse {
+message ReleaseSandboxResponse {
 }
 
 message PauseSandboxRequest {
@@ -218,10 +278,15 @@ message ResumeSandboxResponse {
 }
 
 service Management {
-  rpc CreateSandbox(CreateSandboxRequest) returns (CreateSandboxResponse);
+  rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse);
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  rpc ListProfiles(ListProfilesRequest) returns (ListProfilesResponse);
+  rpc DeleteProfile(DeleteProfileRequest) returns (DeleteProfileResponse);
+
+  rpc ClaimSandbox(ClaimSandboxRequest) returns (ClaimSandboxResponse);
   rpc GetSandbox(GetSandboxRequest) returns (GetSandboxResponse);
   rpc ListSandboxes(ListSandboxesRequest) returns (ListSandboxesResponse);
-  rpc DeleteSandbox(DeleteSandboxRequest) returns (DeleteSandboxResponse);
+  rpc ReleaseSandbox(ReleaseSandboxRequest) returns (ReleaseSandboxResponse);
   rpc PauseSandbox(PauseSandboxRequest) returns (PauseSandboxResponse);
   rpc ResumeSandbox(ResumeSandboxRequest) returns (ResumeSandboxResponse);
 }

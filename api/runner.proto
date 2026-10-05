@@ -118,13 +118,6 @@ service Runner {
   rpc RemoveFile(RemoveFileRequest) returns (RemoveFileResponse);
 }
 
-message ResourceLimits {
-  required string cpu = 1;
-  required int32 memory_in_mbs = 2;
-  optional int32 storage_in_mbs = 3;
-  optional int32 network_bandwidth_in_mbps = 4;
-}
-
 enum InstanceType {
   INSTANCE_TYPE_UNSPECIFIED = 0;
   INSTANCE_TYPE_MICRO       = 1;
@@ -137,6 +130,7 @@ enum InstanceType {
 message NetworkSettings {
   optional bool enable_internet = 1;
   repeated string allowed_egress_cidrs = 2;
+  optional int32 network_bandwidth_in_mbps = 3;
 }
 
 // SandboxProfileSpec is the blueprint for a sandbox: every trait needed to
@@ -147,13 +141,9 @@ message SandboxProfileSpec {
   optional string cwd = 2;
   map<string, string> tags = 4;
   map<string, string> env_vars = 5;
-  optional uint32 auto_delete_after_seconds = 7;
   optional string region = 9;
   optional NetworkSettings network = 10;
-  oneof compute {
-    ResourceLimits resources = 6;
-    InstanceType instance_type = 8;
-  }
+  required InstanceType instance_type = 8;
   // ahead_concurrency is the warm pool size: how many instances of this
   // profile are kept pre-booted to avoid cold starts.
   optional uint32 ahead_concurrency = 11;

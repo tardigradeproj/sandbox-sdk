@@ -1249,85 +1249,18 @@ func (*RemoveFileResponse) Descriptor() ([]byte, []int) {
 	return file_runner_proto_rawDescGZIP(), []int{19}
 }
 
-type ResourceLimits struct {
+type NetworkSettings struct {
 	state                  protoimpl.MessageState `protogen:"open.v1"`
-	Cpu                    *string                `protobuf:"bytes,1,req,name=cpu" json:"cpu,omitempty"`
-	MemoryInMbs            *int32                 `protobuf:"varint,2,req,name=memory_in_mbs,json=memoryInMbs" json:"memory_in_mbs,omitempty"`
-	StorageInMbs           *int32                 `protobuf:"varint,3,opt,name=storage_in_mbs,json=storageInMbs" json:"storage_in_mbs,omitempty"`
-	NetworkBandwidthInMbps *int32                 `protobuf:"varint,4,opt,name=network_bandwidth_in_mbps,json=networkBandwidthInMbps" json:"network_bandwidth_in_mbps,omitempty"`
+	EnableInternet         *bool                  `protobuf:"varint,1,opt,name=enable_internet,json=enableInternet" json:"enable_internet,omitempty"`
+	AllowedEgressCidrs     []string               `protobuf:"bytes,2,rep,name=allowed_egress_cidrs,json=allowedEgressCidrs" json:"allowed_egress_cidrs,omitempty"`
+	NetworkBandwidthInMbps *int32                 `protobuf:"varint,3,opt,name=network_bandwidth_in_mbps,json=networkBandwidthInMbps" json:"network_bandwidth_in_mbps,omitempty"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }
 
-func (x *ResourceLimits) Reset() {
-	*x = ResourceLimits{}
-	mi := &file_runner_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ResourceLimits) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ResourceLimits) ProtoMessage() {}
-
-func (x *ResourceLimits) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ResourceLimits.ProtoReflect.Descriptor instead.
-func (*ResourceLimits) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *ResourceLimits) GetCpu() string {
-	if x != nil && x.Cpu != nil {
-		return *x.Cpu
-	}
-	return ""
-}
-
-func (x *ResourceLimits) GetMemoryInMbs() int32 {
-	if x != nil && x.MemoryInMbs != nil {
-		return *x.MemoryInMbs
-	}
-	return 0
-}
-
-func (x *ResourceLimits) GetStorageInMbs() int32 {
-	if x != nil && x.StorageInMbs != nil {
-		return *x.StorageInMbs
-	}
-	return 0
-}
-
-func (x *ResourceLimits) GetNetworkBandwidthInMbps() int32 {
-	if x != nil && x.NetworkBandwidthInMbps != nil {
-		return *x.NetworkBandwidthInMbps
-	}
-	return 0
-}
-
-type NetworkSettings struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	EnableInternet     *bool                  `protobuf:"varint,1,opt,name=enable_internet,json=enableInternet" json:"enable_internet,omitempty"`
-	AllowedEgressCidrs []string               `protobuf:"bytes,2,rep,name=allowed_egress_cidrs,json=allowedEgressCidrs" json:"allowed_egress_cidrs,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
 func (x *NetworkSettings) Reset() {
 	*x = NetworkSettings{}
-	mi := &file_runner_proto_msgTypes[21]
+	mi := &file_runner_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1339,7 +1272,7 @@ func (x *NetworkSettings) String() string {
 func (*NetworkSettings) ProtoMessage() {}
 
 func (x *NetworkSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[21]
+	mi := &file_runner_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1352,7 +1285,7 @@ func (x *NetworkSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NetworkSettings.ProtoReflect.Descriptor instead.
 func (*NetworkSettings) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{21}
+	return file_runner_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *NetworkSettings) GetEnableInternet() bool {
@@ -1369,23 +1302,25 @@ func (x *NetworkSettings) GetAllowedEgressCidrs() []string {
 	return nil
 }
 
+func (x *NetworkSettings) GetNetworkBandwidthInMbps() int32 {
+	if x != nil && x.NetworkBandwidthInMbps != nil {
+		return *x.NetworkBandwidthInMbps
+	}
+	return 0
+}
+
 // SandboxProfileSpec is the blueprint for a sandbox: every trait needed to
 // produce one, plus the pool-sizing knobs that control how many warm
 // instances of it are kept ready.
 type SandboxProfileSpec struct {
-	state                  protoimpl.MessageState `protogen:"open.v1"`
-	TemplateId             *string                `protobuf:"bytes,1,req,name=template_id,json=templateId" json:"template_id,omitempty"`
-	Cwd                    *string                `protobuf:"bytes,2,opt,name=cwd" json:"cwd,omitempty"`
-	Tags                   map[string]string      `protobuf:"bytes,4,rep,name=tags" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	EnvVars                map[string]string      `protobuf:"bytes,5,rep,name=env_vars,json=envVars" json:"env_vars,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	AutoDeleteAfterSeconds *uint32                `protobuf:"varint,7,opt,name=auto_delete_after_seconds,json=autoDeleteAfterSeconds" json:"auto_delete_after_seconds,omitempty"`
-	Region                 *string                `protobuf:"bytes,9,opt,name=region" json:"region,omitempty"`
-	Network                *NetworkSettings       `protobuf:"bytes,10,opt,name=network" json:"network,omitempty"`
-	// Types that are valid to be assigned to Compute:
-	//
-	//	*SandboxProfileSpec_Resources
-	//	*SandboxProfileSpec_InstanceType
-	Compute isSandboxProfileSpec_Compute `protobuf_oneof:"compute"`
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	TemplateId   *string                `protobuf:"bytes,1,req,name=template_id,json=templateId" json:"template_id,omitempty"`
+	Cwd          *string                `protobuf:"bytes,2,opt,name=cwd" json:"cwd,omitempty"`
+	Tags         map[string]string      `protobuf:"bytes,4,rep,name=tags" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	EnvVars      map[string]string      `protobuf:"bytes,5,rep,name=env_vars,json=envVars" json:"env_vars,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Region       *string                `protobuf:"bytes,9,opt,name=region" json:"region,omitempty"`
+	Network      *NetworkSettings       `protobuf:"bytes,10,opt,name=network" json:"network,omitempty"`
+	InstanceType *InstanceType          `protobuf:"varint,8,req,name=instance_type,json=instanceType,enum=InstanceType" json:"instance_type,omitempty"`
 	// ahead_concurrency is the warm pool size: how many instances of this
 	// profile are kept pre-booted to avoid cold starts.
 	AheadConcurrency *uint32 `protobuf:"varint,11,opt,name=ahead_concurrency,json=aheadConcurrency" json:"ahead_concurrency,omitempty"`
@@ -1398,7 +1333,7 @@ type SandboxProfileSpec struct {
 
 func (x *SandboxProfileSpec) Reset() {
 	*x = SandboxProfileSpec{}
-	mi := &file_runner_proto_msgTypes[22]
+	mi := &file_runner_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1410,7 +1345,7 @@ func (x *SandboxProfileSpec) String() string {
 func (*SandboxProfileSpec) ProtoMessage() {}
 
 func (x *SandboxProfileSpec) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[22]
+	mi := &file_runner_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1423,7 +1358,7 @@ func (x *SandboxProfileSpec) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SandboxProfileSpec.ProtoReflect.Descriptor instead.
 func (*SandboxProfileSpec) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{22}
+	return file_runner_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *SandboxProfileSpec) GetTemplateId() string {
@@ -1454,13 +1389,6 @@ func (x *SandboxProfileSpec) GetEnvVars() map[string]string {
 	return nil
 }
 
-func (x *SandboxProfileSpec) GetAutoDeleteAfterSeconds() uint32 {
-	if x != nil && x.AutoDeleteAfterSeconds != nil {
-		return *x.AutoDeleteAfterSeconds
-	}
-	return 0
-}
-
 func (x *SandboxProfileSpec) GetRegion() string {
 	if x != nil && x.Region != nil {
 		return *x.Region
@@ -1475,27 +1403,9 @@ func (x *SandboxProfileSpec) GetNetwork() *NetworkSettings {
 	return nil
 }
 
-func (x *SandboxProfileSpec) GetCompute() isSandboxProfileSpec_Compute {
-	if x != nil {
-		return x.Compute
-	}
-	return nil
-}
-
-func (x *SandboxProfileSpec) GetResources() *ResourceLimits {
-	if x != nil {
-		if x, ok := x.Compute.(*SandboxProfileSpec_Resources); ok {
-			return x.Resources
-		}
-	}
-	return nil
-}
-
 func (x *SandboxProfileSpec) GetInstanceType() InstanceType {
-	if x != nil {
-		if x, ok := x.Compute.(*SandboxProfileSpec_InstanceType); ok {
-			return x.InstanceType
-		}
+	if x != nil && x.InstanceType != nil {
+		return *x.InstanceType
 	}
 	return InstanceType_INSTANCE_TYPE_UNSPECIFIED
 }
@@ -1514,22 +1424,6 @@ func (x *SandboxProfileSpec) GetConcurrencyLimit() uint32 {
 	return 0
 }
 
-type isSandboxProfileSpec_Compute interface {
-	isSandboxProfileSpec_Compute()
-}
-
-type SandboxProfileSpec_Resources struct {
-	Resources *ResourceLimits `protobuf:"bytes,6,opt,name=resources,oneof"`
-}
-
-type SandboxProfileSpec_InstanceType struct {
-	InstanceType InstanceType `protobuf:"varint,8,opt,name=instance_type,json=instanceType,enum=InstanceType,oneof"`
-}
-
-func (*SandboxProfileSpec_Resources) isSandboxProfileSpec_Compute() {}
-
-func (*SandboxProfileSpec_InstanceType) isSandboxProfileSpec_Compute() {}
-
 // SandboxProfile is a created, addressable SandboxProfileSpec. Sandboxes are
 // always claimed against a profile_id, never against a raw spec.
 type SandboxProfile struct {
@@ -1543,7 +1437,7 @@ type SandboxProfile struct {
 
 func (x *SandboxProfile) Reset() {
 	*x = SandboxProfile{}
-	mi := &file_runner_proto_msgTypes[23]
+	mi := &file_runner_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1555,7 +1449,7 @@ func (x *SandboxProfile) String() string {
 func (*SandboxProfile) ProtoMessage() {}
 
 func (x *SandboxProfile) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[23]
+	mi := &file_runner_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1568,7 +1462,7 @@ func (x *SandboxProfile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SandboxProfile.ProtoReflect.Descriptor instead.
 func (*SandboxProfile) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{23}
+	return file_runner_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *SandboxProfile) GetProfileId() string {
@@ -1601,7 +1495,7 @@ type CreateProfileRequest struct {
 
 func (x *CreateProfileRequest) Reset() {
 	*x = CreateProfileRequest{}
-	mi := &file_runner_proto_msgTypes[24]
+	mi := &file_runner_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1613,7 +1507,7 @@ func (x *CreateProfileRequest) String() string {
 func (*CreateProfileRequest) ProtoMessage() {}
 
 func (x *CreateProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[24]
+	mi := &file_runner_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1626,7 +1520,7 @@ func (x *CreateProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateProfileRequest.ProtoReflect.Descriptor instead.
 func (*CreateProfileRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{24}
+	return file_runner_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *CreateProfileRequest) GetSpec() *SandboxProfileSpec {
@@ -1645,7 +1539,7 @@ type CreateProfileResponse struct {
 
 func (x *CreateProfileResponse) Reset() {
 	*x = CreateProfileResponse{}
-	mi := &file_runner_proto_msgTypes[25]
+	mi := &file_runner_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1657,7 +1551,7 @@ func (x *CreateProfileResponse) String() string {
 func (*CreateProfileResponse) ProtoMessage() {}
 
 func (x *CreateProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[25]
+	mi := &file_runner_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1670,7 +1564,7 @@ func (x *CreateProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateProfileResponse.ProtoReflect.Descriptor instead.
 func (*CreateProfileResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{25}
+	return file_runner_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *CreateProfileResponse) GetProfile() *SandboxProfile {
@@ -1689,7 +1583,7 @@ type GetProfileRequest struct {
 
 func (x *GetProfileRequest) Reset() {
 	*x = GetProfileRequest{}
-	mi := &file_runner_proto_msgTypes[26]
+	mi := &file_runner_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1701,7 +1595,7 @@ func (x *GetProfileRequest) String() string {
 func (*GetProfileRequest) ProtoMessage() {}
 
 func (x *GetProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[26]
+	mi := &file_runner_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1714,7 +1608,7 @@ func (x *GetProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetProfileRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{26}
+	return file_runner_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetProfileRequest) GetProfileId() string {
@@ -1733,7 +1627,7 @@ type GetProfileResponse struct {
 
 func (x *GetProfileResponse) Reset() {
 	*x = GetProfileResponse{}
-	mi := &file_runner_proto_msgTypes[27]
+	mi := &file_runner_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1745,7 +1639,7 @@ func (x *GetProfileResponse) String() string {
 func (*GetProfileResponse) ProtoMessage() {}
 
 func (x *GetProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[27]
+	mi := &file_runner_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1758,7 +1652,7 @@ func (x *GetProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProfileResponse.ProtoReflect.Descriptor instead.
 func (*GetProfileResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{27}
+	return file_runner_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetProfileResponse) GetProfile() *SandboxProfile {
@@ -1779,7 +1673,7 @@ type ListProfilesRequest struct {
 
 func (x *ListProfilesRequest) Reset() {
 	*x = ListProfilesRequest{}
-	mi := &file_runner_proto_msgTypes[28]
+	mi := &file_runner_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1791,7 +1685,7 @@ func (x *ListProfilesRequest) String() string {
 func (*ListProfilesRequest) ProtoMessage() {}
 
 func (x *ListProfilesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[28]
+	mi := &file_runner_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1804,7 +1698,7 @@ func (x *ListProfilesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProfilesRequest.ProtoReflect.Descriptor instead.
 func (*ListProfilesRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{28}
+	return file_runner_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ListProfilesRequest) GetPageSize() uint32 {
@@ -1838,7 +1732,7 @@ type ListProfilesResponse struct {
 
 func (x *ListProfilesResponse) Reset() {
 	*x = ListProfilesResponse{}
-	mi := &file_runner_proto_msgTypes[29]
+	mi := &file_runner_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1850,7 +1744,7 @@ func (x *ListProfilesResponse) String() string {
 func (*ListProfilesResponse) ProtoMessage() {}
 
 func (x *ListProfilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[29]
+	mi := &file_runner_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1863,7 +1757,7 @@ func (x *ListProfilesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProfilesResponse.ProtoReflect.Descriptor instead.
 func (*ListProfilesResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{29}
+	return file_runner_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ListProfilesResponse) GetProfiles() []*SandboxProfile {
@@ -1889,7 +1783,7 @@ type DeleteProfileRequest struct {
 
 func (x *DeleteProfileRequest) Reset() {
 	*x = DeleteProfileRequest{}
-	mi := &file_runner_proto_msgTypes[30]
+	mi := &file_runner_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1901,7 +1795,7 @@ func (x *DeleteProfileRequest) String() string {
 func (*DeleteProfileRequest) ProtoMessage() {}
 
 func (x *DeleteProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[30]
+	mi := &file_runner_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1914,7 +1808,7 @@ func (x *DeleteProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteProfileRequest.ProtoReflect.Descriptor instead.
 func (*DeleteProfileRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{30}
+	return file_runner_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *DeleteProfileRequest) GetProfileId() string {
@@ -1932,7 +1826,7 @@ type DeleteProfileResponse struct {
 
 func (x *DeleteProfileResponse) Reset() {
 	*x = DeleteProfileResponse{}
-	mi := &file_runner_proto_msgTypes[31]
+	mi := &file_runner_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1944,7 +1838,7 @@ func (x *DeleteProfileResponse) String() string {
 func (*DeleteProfileResponse) ProtoMessage() {}
 
 func (x *DeleteProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[31]
+	mi := &file_runner_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1957,7 +1851,7 @@ func (x *DeleteProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteProfileResponse.ProtoReflect.Descriptor instead.
 func (*DeleteProfileResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{31}
+	return file_runner_proto_rawDescGZIP(), []int{30}
 }
 
 type Sandbox struct {
@@ -1972,7 +1866,7 @@ type Sandbox struct {
 
 func (x *Sandbox) Reset() {
 	*x = Sandbox{}
-	mi := &file_runner_proto_msgTypes[32]
+	mi := &file_runner_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1984,7 +1878,7 @@ func (x *Sandbox) String() string {
 func (*Sandbox) ProtoMessage() {}
 
 func (x *Sandbox) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[32]
+	mi := &file_runner_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1997,7 +1891,7 @@ func (x *Sandbox) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Sandbox.ProtoReflect.Descriptor instead.
 func (*Sandbox) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{32}
+	return file_runner_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *Sandbox) GetSandboxId() string {
@@ -2045,7 +1939,7 @@ type ClaimSandboxRequest struct {
 
 func (x *ClaimSandboxRequest) Reset() {
 	*x = ClaimSandboxRequest{}
-	mi := &file_runner_proto_msgTypes[33]
+	mi := &file_runner_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2057,7 +1951,7 @@ func (x *ClaimSandboxRequest) String() string {
 func (*ClaimSandboxRequest) ProtoMessage() {}
 
 func (x *ClaimSandboxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[33]
+	mi := &file_runner_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2070,7 +1964,7 @@ func (x *ClaimSandboxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimSandboxRequest.ProtoReflect.Descriptor instead.
 func (*ClaimSandboxRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{33}
+	return file_runner_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ClaimSandboxRequest) GetTarget() isClaimSandboxRequest_Target {
@@ -2123,7 +2017,7 @@ type ClaimSandboxResponse struct {
 
 func (x *ClaimSandboxResponse) Reset() {
 	*x = ClaimSandboxResponse{}
-	mi := &file_runner_proto_msgTypes[34]
+	mi := &file_runner_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2135,7 +2029,7 @@ func (x *ClaimSandboxResponse) String() string {
 func (*ClaimSandboxResponse) ProtoMessage() {}
 
 func (x *ClaimSandboxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[34]
+	mi := &file_runner_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2148,7 +2042,7 @@ func (x *ClaimSandboxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimSandboxResponse.ProtoReflect.Descriptor instead.
 func (*ClaimSandboxResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{34}
+	return file_runner_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ClaimSandboxResponse) GetSandbox() *Sandbox {
@@ -2167,7 +2061,7 @@ type GetSandboxRequest struct {
 
 func (x *GetSandboxRequest) Reset() {
 	*x = GetSandboxRequest{}
-	mi := &file_runner_proto_msgTypes[35]
+	mi := &file_runner_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2179,7 +2073,7 @@ func (x *GetSandboxRequest) String() string {
 func (*GetSandboxRequest) ProtoMessage() {}
 
 func (x *GetSandboxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[35]
+	mi := &file_runner_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2192,7 +2086,7 @@ func (x *GetSandboxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSandboxRequest.ProtoReflect.Descriptor instead.
 func (*GetSandboxRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{35}
+	return file_runner_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *GetSandboxRequest) GetSandboxId() string {
@@ -2211,7 +2105,7 @@ type GetSandboxResponse struct {
 
 func (x *GetSandboxResponse) Reset() {
 	*x = GetSandboxResponse{}
-	mi := &file_runner_proto_msgTypes[36]
+	mi := &file_runner_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2223,7 +2117,7 @@ func (x *GetSandboxResponse) String() string {
 func (*GetSandboxResponse) ProtoMessage() {}
 
 func (x *GetSandboxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[36]
+	mi := &file_runner_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2236,7 +2130,7 @@ func (x *GetSandboxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSandboxResponse.ProtoReflect.Descriptor instead.
 func (*GetSandboxResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{36}
+	return file_runner_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetSandboxResponse) GetSandbox() *Sandbox {
@@ -2258,7 +2152,7 @@ type ListSandboxesRequest struct {
 
 func (x *ListSandboxesRequest) Reset() {
 	*x = ListSandboxesRequest{}
-	mi := &file_runner_proto_msgTypes[37]
+	mi := &file_runner_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2270,7 +2164,7 @@ func (x *ListSandboxesRequest) String() string {
 func (*ListSandboxesRequest) ProtoMessage() {}
 
 func (x *ListSandboxesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[37]
+	mi := &file_runner_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2283,7 +2177,7 @@ func (x *ListSandboxesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSandboxesRequest.ProtoReflect.Descriptor instead.
 func (*ListSandboxesRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{37}
+	return file_runner_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *ListSandboxesRequest) GetPageSize() uint32 {
@@ -2324,7 +2218,7 @@ type ListSandboxesResponse struct {
 
 func (x *ListSandboxesResponse) Reset() {
 	*x = ListSandboxesResponse{}
-	mi := &file_runner_proto_msgTypes[38]
+	mi := &file_runner_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2336,7 +2230,7 @@ func (x *ListSandboxesResponse) String() string {
 func (*ListSandboxesResponse) ProtoMessage() {}
 
 func (x *ListSandboxesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[38]
+	mi := &file_runner_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2349,7 +2243,7 @@ func (x *ListSandboxesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSandboxesResponse.ProtoReflect.Descriptor instead.
 func (*ListSandboxesResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{38}
+	return file_runner_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *ListSandboxesResponse) GetSandboxes() []*Sandbox {
@@ -2375,7 +2269,7 @@ type ReleaseSandboxRequest struct {
 
 func (x *ReleaseSandboxRequest) Reset() {
 	*x = ReleaseSandboxRequest{}
-	mi := &file_runner_proto_msgTypes[39]
+	mi := &file_runner_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2387,7 +2281,7 @@ func (x *ReleaseSandboxRequest) String() string {
 func (*ReleaseSandboxRequest) ProtoMessage() {}
 
 func (x *ReleaseSandboxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[39]
+	mi := &file_runner_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2400,7 +2294,7 @@ func (x *ReleaseSandboxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReleaseSandboxRequest.ProtoReflect.Descriptor instead.
 func (*ReleaseSandboxRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{39}
+	return file_runner_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ReleaseSandboxRequest) GetSandboxId() string {
@@ -2418,7 +2312,7 @@ type ReleaseSandboxResponse struct {
 
 func (x *ReleaseSandboxResponse) Reset() {
 	*x = ReleaseSandboxResponse{}
-	mi := &file_runner_proto_msgTypes[40]
+	mi := &file_runner_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2430,7 +2324,7 @@ func (x *ReleaseSandboxResponse) String() string {
 func (*ReleaseSandboxResponse) ProtoMessage() {}
 
 func (x *ReleaseSandboxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[40]
+	mi := &file_runner_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2443,7 +2337,7 @@ func (x *ReleaseSandboxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReleaseSandboxResponse.ProtoReflect.Descriptor instead.
 func (*ReleaseSandboxResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{40}
+	return file_runner_proto_rawDescGZIP(), []int{39}
 }
 
 type PauseSandboxRequest struct {
@@ -2455,7 +2349,7 @@ type PauseSandboxRequest struct {
 
 func (x *PauseSandboxRequest) Reset() {
 	*x = PauseSandboxRequest{}
-	mi := &file_runner_proto_msgTypes[41]
+	mi := &file_runner_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2467,7 +2361,7 @@ func (x *PauseSandboxRequest) String() string {
 func (*PauseSandboxRequest) ProtoMessage() {}
 
 func (x *PauseSandboxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[41]
+	mi := &file_runner_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2480,7 +2374,7 @@ func (x *PauseSandboxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PauseSandboxRequest.ProtoReflect.Descriptor instead.
 func (*PauseSandboxRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{41}
+	return file_runner_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *PauseSandboxRequest) GetSandboxId() string {
@@ -2498,7 +2392,7 @@ type PauseSandboxResponse struct {
 
 func (x *PauseSandboxResponse) Reset() {
 	*x = PauseSandboxResponse{}
-	mi := &file_runner_proto_msgTypes[42]
+	mi := &file_runner_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2510,7 +2404,7 @@ func (x *PauseSandboxResponse) String() string {
 func (*PauseSandboxResponse) ProtoMessage() {}
 
 func (x *PauseSandboxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[42]
+	mi := &file_runner_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2523,7 +2417,7 @@ func (x *PauseSandboxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PauseSandboxResponse.ProtoReflect.Descriptor instead.
 func (*PauseSandboxResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{42}
+	return file_runner_proto_rawDescGZIP(), []int{41}
 }
 
 type ResumeSandboxRequest struct {
@@ -2535,7 +2429,7 @@ type ResumeSandboxRequest struct {
 
 func (x *ResumeSandboxRequest) Reset() {
 	*x = ResumeSandboxRequest{}
-	mi := &file_runner_proto_msgTypes[43]
+	mi := &file_runner_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2547,7 +2441,7 @@ func (x *ResumeSandboxRequest) String() string {
 func (*ResumeSandboxRequest) ProtoMessage() {}
 
 func (x *ResumeSandboxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[43]
+	mi := &file_runner_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2560,7 +2454,7 @@ func (x *ResumeSandboxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeSandboxRequest.ProtoReflect.Descriptor instead.
 func (*ResumeSandboxRequest) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{43}
+	return file_runner_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *ResumeSandboxRequest) GetSandboxId() string {
@@ -2578,7 +2472,7 @@ type ResumeSandboxResponse struct {
 
 func (x *ResumeSandboxResponse) Reset() {
 	*x = ResumeSandboxResponse{}
-	mi := &file_runner_proto_msgTypes[44]
+	mi := &file_runner_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2590,7 +2484,7 @@ func (x *ResumeSandboxResponse) String() string {
 func (*ResumeSandboxResponse) ProtoMessage() {}
 
 func (x *ResumeSandboxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_runner_proto_msgTypes[44]
+	mi := &file_runner_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2603,7 +2497,7 @@ func (x *ResumeSandboxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeSandboxResponse.ProtoReflect.Descriptor instead.
 func (*ResumeSandboxResponse) Descriptor() ([]byte, []int) {
-	return file_runner_proto_rawDescGZIP(), []int{44}
+	return file_runner_proto_rawDescGZIP(), []int{43}
 }
 
 var File_runner_proto protoreflect.FileDescriptor
@@ -2674,26 +2568,20 @@ const file_runner_proto_rawDesc = "" +
 	"\x04path\x18\x01 \x02(\tR\x04path\x12\x1c\n" +
 	"\trecursive\x18\x02 \x01(\bR\trecursive\"\x14\n" +
 	"\x12RemoveFileResponse\"\xa7\x01\n" +
-	"\x0eResourceLimits\x12\x10\n" +
-	"\x03cpu\x18\x01 \x02(\tR\x03cpu\x12\"\n" +
-	"\rmemory_in_mbs\x18\x02 \x02(\x05R\vmemoryInMbs\x12$\n" +
-	"\x0estorage_in_mbs\x18\x03 \x01(\x05R\fstorageInMbs\x129\n" +
-	"\x19network_bandwidth_in_mbps\x18\x04 \x01(\x05R\x16networkBandwidthInMbps\"l\n" +
 	"\x0fNetworkSettings\x12'\n" +
 	"\x0fenable_internet\x18\x01 \x01(\bR\x0eenableInternet\x120\n" +
-	"\x14allowed_egress_cidrs\x18\x02 \x03(\tR\x12allowedEgressCidrs\"\xf7\x04\n" +
+	"\x14allowed_egress_cidrs\x18\x02 \x03(\tR\x12allowedEgressCidrs\x129\n" +
+	"\x19network_bandwidth_in_mbps\x18\x03 \x01(\x05R\x16networkBandwidthInMbps\"\xfe\x03\n" +
 	"\x12SandboxProfileSpec\x12\x1f\n" +
 	"\vtemplate_id\x18\x01 \x02(\tR\n" +
 	"templateId\x12\x10\n" +
 	"\x03cwd\x18\x02 \x01(\tR\x03cwd\x121\n" +
 	"\x04tags\x18\x04 \x03(\v2\x1d.SandboxProfileSpec.TagsEntryR\x04tags\x12;\n" +
-	"\benv_vars\x18\x05 \x03(\v2 .SandboxProfileSpec.EnvVarsEntryR\aenvVars\x129\n" +
-	"\x19auto_delete_after_seconds\x18\a \x01(\rR\x16autoDeleteAfterSeconds\x12\x16\n" +
+	"\benv_vars\x18\x05 \x03(\v2 .SandboxProfileSpec.EnvVarsEntryR\aenvVars\x12\x16\n" +
 	"\x06region\x18\t \x01(\tR\x06region\x12*\n" +
 	"\anetwork\x18\n" +
-	" \x01(\v2\x10.NetworkSettingsR\anetwork\x12/\n" +
-	"\tresources\x18\x06 \x01(\v2\x0f.ResourceLimitsH\x00R\tresources\x124\n" +
-	"\rinstance_type\x18\b \x01(\x0e2\r.InstanceTypeH\x00R\finstanceType\x12+\n" +
+	" \x01(\v2\x10.NetworkSettingsR\anetwork\x122\n" +
+	"\rinstance_type\x18\b \x02(\x0e2\r.InstanceTypeR\finstanceType\x12+\n" +
 	"\x11ahead_concurrency\x18\v \x01(\rR\x10aheadConcurrency\x12+\n" +
 	"\x11concurrency_limit\x18\f \x01(\rR\x10concurrencyLimit\x1a7\n" +
 	"\tTagsEntry\x12\x10\n" +
@@ -2701,8 +2589,7 @@ const file_runner_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a:\n" +
 	"\fEnvVarsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\t\n" +
-	"\acompute\"w\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"w\n" +
 	"\x0eSandboxProfile\x12\x1d\n" +
 	"\n" +
 	"profile_id\x18\x01 \x02(\tR\tprofileId\x12'\n" +
@@ -2838,7 +2725,7 @@ func file_runner_proto_rawDescGZIP() []byte {
 }
 
 var file_runner_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_runner_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
+var file_runner_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
 var file_runner_proto_goTypes = []any{
 	(Signal)(0),                    // 0: Signal
 	(InstanceType)(0),              // 1: InstanceType
@@ -2863,103 +2750,101 @@ var file_runner_proto_goTypes = []any{
 	(*ListFilesResponse)(nil),      // 20: ListFilesResponse
 	(*RemoveFileRequest)(nil),      // 21: RemoveFileRequest
 	(*RemoveFileResponse)(nil),     // 22: RemoveFileResponse
-	(*ResourceLimits)(nil),         // 23: ResourceLimits
-	(*NetworkSettings)(nil),        // 24: NetworkSettings
-	(*SandboxProfileSpec)(nil),     // 25: SandboxProfileSpec
-	(*SandboxProfile)(nil),         // 26: SandboxProfile
-	(*CreateProfileRequest)(nil),   // 27: CreateProfileRequest
-	(*CreateProfileResponse)(nil),  // 28: CreateProfileResponse
-	(*GetProfileRequest)(nil),      // 29: GetProfileRequest
-	(*GetProfileResponse)(nil),     // 30: GetProfileResponse
-	(*ListProfilesRequest)(nil),    // 31: ListProfilesRequest
-	(*ListProfilesResponse)(nil),   // 32: ListProfilesResponse
-	(*DeleteProfileRequest)(nil),   // 33: DeleteProfileRequest
-	(*DeleteProfileResponse)(nil),  // 34: DeleteProfileResponse
-	(*Sandbox)(nil),                // 35: Sandbox
-	(*ClaimSandboxRequest)(nil),    // 36: ClaimSandboxRequest
-	(*ClaimSandboxResponse)(nil),   // 37: ClaimSandboxResponse
-	(*GetSandboxRequest)(nil),      // 38: GetSandboxRequest
-	(*GetSandboxResponse)(nil),     // 39: GetSandboxResponse
-	(*ListSandboxesRequest)(nil),   // 40: ListSandboxesRequest
-	(*ListSandboxesResponse)(nil),  // 41: ListSandboxesResponse
-	(*ReleaseSandboxRequest)(nil),  // 42: ReleaseSandboxRequest
-	(*ReleaseSandboxResponse)(nil), // 43: ReleaseSandboxResponse
-	(*PauseSandboxRequest)(nil),    // 44: PauseSandboxRequest
-	(*PauseSandboxResponse)(nil),   // 45: PauseSandboxResponse
-	(*ResumeSandboxRequest)(nil),   // 46: ResumeSandboxRequest
-	(*ResumeSandboxResponse)(nil),  // 47: ResumeSandboxResponse
-	nil,                            // 48: ProcessConfig.EnvVarsEntry
-	nil,                            // 49: SandboxProfileSpec.TagsEntry
-	nil,                            // 50: SandboxProfileSpec.EnvVarsEntry
-	nil,                            // 51: ListProfilesRequest.LabelSelectorEntry
-	nil,                            // 52: ListSandboxesRequest.LabelSelectorEntry
-	(*emptypb.Empty)(nil),          // 53: google.protobuf.Empty
+	(*NetworkSettings)(nil),        // 23: NetworkSettings
+	(*SandboxProfileSpec)(nil),     // 24: SandboxProfileSpec
+	(*SandboxProfile)(nil),         // 25: SandboxProfile
+	(*CreateProfileRequest)(nil),   // 26: CreateProfileRequest
+	(*CreateProfileResponse)(nil),  // 27: CreateProfileResponse
+	(*GetProfileRequest)(nil),      // 28: GetProfileRequest
+	(*GetProfileResponse)(nil),     // 29: GetProfileResponse
+	(*ListProfilesRequest)(nil),    // 30: ListProfilesRequest
+	(*ListProfilesResponse)(nil),   // 31: ListProfilesResponse
+	(*DeleteProfileRequest)(nil),   // 32: DeleteProfileRequest
+	(*DeleteProfileResponse)(nil),  // 33: DeleteProfileResponse
+	(*Sandbox)(nil),                // 34: Sandbox
+	(*ClaimSandboxRequest)(nil),    // 35: ClaimSandboxRequest
+	(*ClaimSandboxResponse)(nil),   // 36: ClaimSandboxResponse
+	(*GetSandboxRequest)(nil),      // 37: GetSandboxRequest
+	(*GetSandboxResponse)(nil),     // 38: GetSandboxResponse
+	(*ListSandboxesRequest)(nil),   // 39: ListSandboxesRequest
+	(*ListSandboxesResponse)(nil),  // 40: ListSandboxesResponse
+	(*ReleaseSandboxRequest)(nil),  // 41: ReleaseSandboxRequest
+	(*ReleaseSandboxResponse)(nil), // 42: ReleaseSandboxResponse
+	(*PauseSandboxRequest)(nil),    // 43: PauseSandboxRequest
+	(*PauseSandboxResponse)(nil),   // 44: PauseSandboxResponse
+	(*ResumeSandboxRequest)(nil),   // 45: ResumeSandboxRequest
+	(*ResumeSandboxResponse)(nil),  // 46: ResumeSandboxResponse
+	nil,                            // 47: ProcessConfig.EnvVarsEntry
+	nil,                            // 48: SandboxProfileSpec.TagsEntry
+	nil,                            // 49: SandboxProfileSpec.EnvVarsEntry
+	nil,                            // 50: ListProfilesRequest.LabelSelectorEntry
+	nil,                            // 51: ListSandboxesRequest.LabelSelectorEntry
+	(*emptypb.Empty)(nil),          // 52: google.protobuf.Empty
 }
 var file_runner_proto_depIdxs = []int32{
-	48, // 0: ProcessConfig.env_vars:type_name -> ProcessConfig.EnvVarsEntry
+	47, // 0: ProcessConfig.env_vars:type_name -> ProcessConfig.EnvVarsEntry
 	4,  // 1: ExecRequest.config:type_name -> ProcessConfig
 	3,  // 2: ExecRequest.pty:type_name -> PTY
 	6,  // 3: AsyncExecResponse.init:type_name -> InitEvent
 	7,  // 4: AsyncExecResponse.exit:type_name -> ExitEvent
 	0,  // 5: SendSignalRequest.signal:type_name -> Signal
-	53, // 6: WriteStdinRequest.eof:type_name -> google.protobuf.Empty
+	52, // 6: WriteStdinRequest.eof:type_name -> google.protobuf.Empty
 	19, // 7: ListFilesResponse.entries:type_name -> FileInfo
-	49, // 8: SandboxProfileSpec.tags:type_name -> SandboxProfileSpec.TagsEntry
-	50, // 9: SandboxProfileSpec.env_vars:type_name -> SandboxProfileSpec.EnvVarsEntry
-	24, // 10: SandboxProfileSpec.network:type_name -> NetworkSettings
-	23, // 11: SandboxProfileSpec.resources:type_name -> ResourceLimits
-	1,  // 12: SandboxProfileSpec.instance_type:type_name -> InstanceType
-	25, // 13: SandboxProfile.spec:type_name -> SandboxProfileSpec
-	25, // 14: CreateProfileRequest.spec:type_name -> SandboxProfileSpec
-	26, // 15: CreateProfileResponse.profile:type_name -> SandboxProfile
-	26, // 16: GetProfileResponse.profile:type_name -> SandboxProfile
-	51, // 17: ListProfilesRequest.label_selector:type_name -> ListProfilesRequest.LabelSelectorEntry
-	26, // 18: ListProfilesResponse.profiles:type_name -> SandboxProfile
-	2,  // 19: Sandbox.state:type_name -> SandboxState
-	25, // 20: ClaimSandboxRequest.profile:type_name -> SandboxProfileSpec
-	35, // 21: ClaimSandboxResponse.sandbox:type_name -> Sandbox
-	35, // 22: GetSandboxResponse.sandbox:type_name -> Sandbox
-	52, // 23: ListSandboxesRequest.label_selector:type_name -> ListSandboxesRequest.LabelSelectorEntry
-	35, // 24: ListSandboxesResponse.sandboxes:type_name -> Sandbox
-	5,  // 25: Runner.Exec:input_type -> ExecRequest
-	10, // 26: Runner.SendSignal:input_type -> SendSignalRequest
-	12, // 27: Runner.WriteStdin:input_type -> WriteStdinRequest
-	14, // 28: Runner.UploadFile:input_type -> UploadFileChunk
-	16, // 29: Runner.DownloadFile:input_type -> DownloadFileRequest
-	18, // 30: Runner.ListFiles:input_type -> ListFilesRequest
-	21, // 31: Runner.RemoveFile:input_type -> RemoveFileRequest
-	27, // 32: Management.CreateProfile:input_type -> CreateProfileRequest
-	29, // 33: Management.GetProfile:input_type -> GetProfileRequest
-	31, // 34: Management.ListProfiles:input_type -> ListProfilesRequest
-	33, // 35: Management.DeleteProfile:input_type -> DeleteProfileRequest
-	36, // 36: Management.ClaimSandbox:input_type -> ClaimSandboxRequest
-	38, // 37: Management.GetSandbox:input_type -> GetSandboxRequest
-	40, // 38: Management.ListSandboxes:input_type -> ListSandboxesRequest
-	42, // 39: Management.ReleaseSandbox:input_type -> ReleaseSandboxRequest
-	44, // 40: Management.PauseSandbox:input_type -> PauseSandboxRequest
-	46, // 41: Management.ResumeSandbox:input_type -> ResumeSandboxRequest
-	8,  // 42: Runner.Exec:output_type -> AsyncExecResponse
-	11, // 43: Runner.SendSignal:output_type -> SendSignalResponse
-	13, // 44: Runner.WriteStdin:output_type -> WriteStdinResponse
-	15, // 45: Runner.UploadFile:output_type -> UploadFileResponse
-	17, // 46: Runner.DownloadFile:output_type -> DownloadFileChunk
-	20, // 47: Runner.ListFiles:output_type -> ListFilesResponse
-	22, // 48: Runner.RemoveFile:output_type -> RemoveFileResponse
-	28, // 49: Management.CreateProfile:output_type -> CreateProfileResponse
-	30, // 50: Management.GetProfile:output_type -> GetProfileResponse
-	32, // 51: Management.ListProfiles:output_type -> ListProfilesResponse
-	34, // 52: Management.DeleteProfile:output_type -> DeleteProfileResponse
-	37, // 53: Management.ClaimSandbox:output_type -> ClaimSandboxResponse
-	39, // 54: Management.GetSandbox:output_type -> GetSandboxResponse
-	41, // 55: Management.ListSandboxes:output_type -> ListSandboxesResponse
-	43, // 56: Management.ReleaseSandbox:output_type -> ReleaseSandboxResponse
-	45, // 57: Management.PauseSandbox:output_type -> PauseSandboxResponse
-	47, // 58: Management.ResumeSandbox:output_type -> ResumeSandboxResponse
-	42, // [42:59] is the sub-list for method output_type
-	25, // [25:42] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	48, // 8: SandboxProfileSpec.tags:type_name -> SandboxProfileSpec.TagsEntry
+	49, // 9: SandboxProfileSpec.env_vars:type_name -> SandboxProfileSpec.EnvVarsEntry
+	23, // 10: SandboxProfileSpec.network:type_name -> NetworkSettings
+	1,  // 11: SandboxProfileSpec.instance_type:type_name -> InstanceType
+	24, // 12: SandboxProfile.spec:type_name -> SandboxProfileSpec
+	24, // 13: CreateProfileRequest.spec:type_name -> SandboxProfileSpec
+	25, // 14: CreateProfileResponse.profile:type_name -> SandboxProfile
+	25, // 15: GetProfileResponse.profile:type_name -> SandboxProfile
+	50, // 16: ListProfilesRequest.label_selector:type_name -> ListProfilesRequest.LabelSelectorEntry
+	25, // 17: ListProfilesResponse.profiles:type_name -> SandboxProfile
+	2,  // 18: Sandbox.state:type_name -> SandboxState
+	24, // 19: ClaimSandboxRequest.profile:type_name -> SandboxProfileSpec
+	34, // 20: ClaimSandboxResponse.sandbox:type_name -> Sandbox
+	34, // 21: GetSandboxResponse.sandbox:type_name -> Sandbox
+	51, // 22: ListSandboxesRequest.label_selector:type_name -> ListSandboxesRequest.LabelSelectorEntry
+	34, // 23: ListSandboxesResponse.sandboxes:type_name -> Sandbox
+	5,  // 24: Runner.Exec:input_type -> ExecRequest
+	10, // 25: Runner.SendSignal:input_type -> SendSignalRequest
+	12, // 26: Runner.WriteStdin:input_type -> WriteStdinRequest
+	14, // 27: Runner.UploadFile:input_type -> UploadFileChunk
+	16, // 28: Runner.DownloadFile:input_type -> DownloadFileRequest
+	18, // 29: Runner.ListFiles:input_type -> ListFilesRequest
+	21, // 30: Runner.RemoveFile:input_type -> RemoveFileRequest
+	26, // 31: Management.CreateProfile:input_type -> CreateProfileRequest
+	28, // 32: Management.GetProfile:input_type -> GetProfileRequest
+	30, // 33: Management.ListProfiles:input_type -> ListProfilesRequest
+	32, // 34: Management.DeleteProfile:input_type -> DeleteProfileRequest
+	35, // 35: Management.ClaimSandbox:input_type -> ClaimSandboxRequest
+	37, // 36: Management.GetSandbox:input_type -> GetSandboxRequest
+	39, // 37: Management.ListSandboxes:input_type -> ListSandboxesRequest
+	41, // 38: Management.ReleaseSandbox:input_type -> ReleaseSandboxRequest
+	43, // 39: Management.PauseSandbox:input_type -> PauseSandboxRequest
+	45, // 40: Management.ResumeSandbox:input_type -> ResumeSandboxRequest
+	8,  // 41: Runner.Exec:output_type -> AsyncExecResponse
+	11, // 42: Runner.SendSignal:output_type -> SendSignalResponse
+	13, // 43: Runner.WriteStdin:output_type -> WriteStdinResponse
+	15, // 44: Runner.UploadFile:output_type -> UploadFileResponse
+	17, // 45: Runner.DownloadFile:output_type -> DownloadFileChunk
+	20, // 46: Runner.ListFiles:output_type -> ListFilesResponse
+	22, // 47: Runner.RemoveFile:output_type -> RemoveFileResponse
+	27, // 48: Management.CreateProfile:output_type -> CreateProfileResponse
+	29, // 49: Management.GetProfile:output_type -> GetProfileResponse
+	31, // 50: Management.ListProfiles:output_type -> ListProfilesResponse
+	33, // 51: Management.DeleteProfile:output_type -> DeleteProfileResponse
+	36, // 52: Management.ClaimSandbox:output_type -> ClaimSandboxResponse
+	38, // 53: Management.GetSandbox:output_type -> GetSandboxResponse
+	40, // 54: Management.ListSandboxes:output_type -> ListSandboxesResponse
+	42, // 55: Management.ReleaseSandbox:output_type -> ReleaseSandboxResponse
+	44, // 56: Management.PauseSandbox:output_type -> PauseSandboxResponse
+	46, // 57: Management.ResumeSandbox:output_type -> ResumeSandboxResponse
+	41, // [41:58] is the sub-list for method output_type
+	24, // [24:41] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_runner_proto_init() }
@@ -2971,11 +2856,7 @@ func file_runner_proto_init() {
 		(*WriteStdinRequest_Input)(nil),
 		(*WriteStdinRequest_Eof)(nil),
 	}
-	file_runner_proto_msgTypes[22].OneofWrappers = []any{
-		(*SandboxProfileSpec_Resources)(nil),
-		(*SandboxProfileSpec_InstanceType)(nil),
-	}
-	file_runner_proto_msgTypes[33].OneofWrappers = []any{
+	file_runner_proto_msgTypes[32].OneofWrappers = []any{
 		(*ClaimSandboxRequest_ProfileId)(nil),
 		(*ClaimSandboxRequest_Profile)(nil),
 	}
@@ -2985,7 +2866,7 @@ func file_runner_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_runner_proto_rawDesc), len(file_runner_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   50,
+			NumMessages:   49,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

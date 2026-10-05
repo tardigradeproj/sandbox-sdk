@@ -1315,6 +1315,7 @@ func (x *NetworkSettings) GetNetworkBandwidthInMbps() int32 {
 type SandboxProfileSpec struct {
 	state        protoimpl.MessageState `protogen:"open.v1"`
 	TemplateId   *string                `protobuf:"bytes,1,req,name=template_id,json=templateId" json:"template_id,omitempty"`
+	Name         *string                `protobuf:"bytes,13,opt,name=name" json:"name,omitempty"`
 	Cwd          *string                `protobuf:"bytes,2,opt,name=cwd" json:"cwd,omitempty"`
 	Tags         map[string]string      `protobuf:"bytes,4,rep,name=tags" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	EnvVars      map[string]string      `protobuf:"bytes,5,rep,name=env_vars,json=envVars" json:"env_vars,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -1364,6 +1365,13 @@ func (*SandboxProfileSpec) Descriptor() ([]byte, []int) {
 func (x *SandboxProfileSpec) GetTemplateId() string {
 	if x != nil && x.TemplateId != nil {
 		return *x.TemplateId
+	}
+	return ""
+}
+
+func (x *SandboxProfileSpec) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -1425,10 +1433,10 @@ func (x *SandboxProfileSpec) GetConcurrencyLimit() uint32 {
 }
 
 // SandboxProfile is a created, addressable SandboxProfileSpec. Sandboxes are
-// always claimed against a profile_id, never against a raw spec.
+// always claimed against a name, never against a raw spec.
 type SandboxProfile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProfileId     *string                `protobuf:"bytes,1,req,name=profile_id,json=profileId" json:"profile_id,omitempty"`
+	Name          *string                `protobuf:"bytes,1,req,name=name" json:"name,omitempty"`
 	Spec          *SandboxProfileSpec    `protobuf:"bytes,2,req,name=spec" json:"spec,omitempty"`
 	CreatedAt     *int64                 `protobuf:"varint,3,req,name=created_at,json=createdAt" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1465,9 +1473,9 @@ func (*SandboxProfile) Descriptor() ([]byte, []int) {
 	return file_runner_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *SandboxProfile) GetProfileId() string {
-	if x != nil && x.ProfileId != nil {
-		return *x.ProfileId
+func (x *SandboxProfile) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -1576,7 +1584,7 @@ func (x *CreateProfileResponse) GetProfile() *SandboxProfile {
 
 type GetProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProfileId     *string                `protobuf:"bytes,1,req,name=profile_id,json=profileId" json:"profile_id,omitempty"`
+	Name          *string                `protobuf:"bytes,1,req,name=name" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1611,9 +1619,9 @@ func (*GetProfileRequest) Descriptor() ([]byte, []int) {
 	return file_runner_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *GetProfileRequest) GetProfileId() string {
-	if x != nil && x.ProfileId != nil {
-		return *x.ProfileId
+func (x *GetProfileRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -1776,7 +1784,7 @@ func (x *ListProfilesResponse) GetNextPageToken() string {
 
 type DeleteProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProfileId     *string                `protobuf:"bytes,1,req,name=profile_id,json=profileId" json:"profile_id,omitempty"`
+	Name          *string                `protobuf:"bytes,1,req,name=name" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1811,9 +1819,9 @@ func (*DeleteProfileRequest) Descriptor() ([]byte, []int) {
 	return file_runner_proto_rawDescGZIP(), []int{29}
 }
 
-func (x *DeleteProfileRequest) GetProfileId() string {
-	if x != nil && x.ProfileId != nil {
-		return *x.ProfileId
+func (x *DeleteProfileRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -1858,7 +1866,7 @@ type Sandbox struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	SandboxId     *string                `protobuf:"bytes,1,req,name=sandbox_id,json=sandboxId" json:"sandbox_id,omitempty"`
 	State         *SandboxState          `protobuf:"varint,2,req,name=state,enum=SandboxState" json:"state,omitempty"`
-	ProfileId     *string                `protobuf:"bytes,3,req,name=profile_id,json=profileId" json:"profile_id,omitempty"`
+	Name          *string                `protobuf:"bytes,3,req,name=name" json:"name,omitempty"`
 	CreatedAt     *int64                 `protobuf:"varint,4,req,name=created_at,json=createdAt" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1908,9 +1916,9 @@ func (x *Sandbox) GetState() SandboxState {
 	return SandboxState_SANDBOX_STATE_UNSPECIFIED
 }
 
-func (x *Sandbox) GetProfileId() string {
-	if x != nil && x.ProfileId != nil {
-		return *x.ProfileId
+func (x *Sandbox) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -1923,14 +1931,14 @@ func (x *Sandbox) GetCreatedAt() int64 {
 }
 
 // ClaimSandboxRequest claims a sandbox. The profile can already exist
-// (claim by profile_id, the ahead-of-time path) or be created on demand by
+// (claim by name, the ahead-of-time path) or be created on demand by
 // supplying its spec inline — either way the result is a sandbox bound to a
 // profile.
 type ClaimSandboxRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Target:
 	//
-	//	*ClaimSandboxRequest_ProfileId
+	//	*ClaimSandboxRequest_Name
 	//	*ClaimSandboxRequest_Profile
 	Target        isClaimSandboxRequest_Target `protobuf_oneof:"target"`
 	unknownFields protoimpl.UnknownFields
@@ -1974,10 +1982,10 @@ func (x *ClaimSandboxRequest) GetTarget() isClaimSandboxRequest_Target {
 	return nil
 }
 
-func (x *ClaimSandboxRequest) GetProfileId() string {
+func (x *ClaimSandboxRequest) GetName() string {
 	if x != nil {
-		if x, ok := x.Target.(*ClaimSandboxRequest_ProfileId); ok {
-			return x.ProfileId
+		if x, ok := x.Target.(*ClaimSandboxRequest_Name); ok {
+			return x.Name
 		}
 	}
 	return ""
@@ -1996,15 +2004,15 @@ type isClaimSandboxRequest_Target interface {
 	isClaimSandboxRequest_Target()
 }
 
-type ClaimSandboxRequest_ProfileId struct {
-	ProfileId string `protobuf:"bytes,1,opt,name=profile_id,json=profileId,oneof"`
+type ClaimSandboxRequest_Name struct {
+	Name string `protobuf:"bytes,1,opt,name=name,oneof"`
 }
 
 type ClaimSandboxRequest_Profile struct {
 	Profile *SandboxProfileSpec `protobuf:"bytes,2,opt,name=profile,oneof"`
 }
 
-func (*ClaimSandboxRequest_ProfileId) isClaimSandboxRequest_Target() {}
+func (*ClaimSandboxRequest_Name) isClaimSandboxRequest_Target() {}
 
 func (*ClaimSandboxRequest_Profile) isClaimSandboxRequest_Target() {}
 
@@ -2145,7 +2153,7 @@ type ListSandboxesRequest struct {
 	PageSize      *uint32                `protobuf:"varint,1,opt,name=page_size,json=pageSize" json:"page_size,omitempty"`
 	PageToken     *string                `protobuf:"bytes,2,opt,name=page_token,json=pageToken" json:"page_token,omitempty"`
 	LabelSelector map[string]string      `protobuf:"bytes,3,rep,name=label_selector,json=labelSelector" json:"label_selector,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	ProfileId     *string                `protobuf:"bytes,4,opt,name=profile_id,json=profileId" json:"profile_id,omitempty"`
+	Name          *string                `protobuf:"bytes,4,opt,name=name" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2201,9 +2209,9 @@ func (x *ListSandboxesRequest) GetLabelSelector() map[string]string {
 	return nil
 }
 
-func (x *ListSandboxesRequest) GetProfileId() string {
-	if x != nil && x.ProfileId != nil {
-		return *x.ProfileId
+func (x *ListSandboxesRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -2571,10 +2579,11 @@ const file_runner_proto_rawDesc = "" +
 	"\x0fNetworkSettings\x12'\n" +
 	"\x0fenable_internet\x18\x01 \x01(\bR\x0eenableInternet\x120\n" +
 	"\x14allowed_egress_cidrs\x18\x02 \x03(\tR\x12allowedEgressCidrs\x129\n" +
-	"\x19network_bandwidth_in_mbps\x18\x03 \x01(\x05R\x16networkBandwidthInMbps\"\xfe\x03\n" +
+	"\x19network_bandwidth_in_mbps\x18\x03 \x01(\x05R\x16networkBandwidthInMbps\"\x92\x04\n" +
 	"\x12SandboxProfileSpec\x12\x1f\n" +
 	"\vtemplate_id\x18\x01 \x02(\tR\n" +
-	"templateId\x12\x10\n" +
+	"templateId\x12\x12\n" +
+	"\x04name\x18\r \x01(\tR\x04name\x12\x10\n" +
 	"\x03cwd\x18\x02 \x01(\tR\x03cwd\x121\n" +
 	"\x04tags\x18\x04 \x03(\v2\x1d.SandboxProfileSpec.TagsEntryR\x04tags\x12;\n" +
 	"\benv_vars\x18\x05 \x03(\v2 .SandboxProfileSpec.EnvVarsEntryR\aenvVars\x12\x16\n" +
@@ -2589,20 +2598,18 @@ const file_runner_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a:\n" +
 	"\fEnvVarsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"w\n" +
-	"\x0eSandboxProfile\x12\x1d\n" +
-	"\n" +
-	"profile_id\x18\x01 \x02(\tR\tprofileId\x12'\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"l\n" +
+	"\x0eSandboxProfile\x12\x12\n" +
+	"\x04name\x18\x01 \x02(\tR\x04name\x12'\n" +
 	"\x04spec\x18\x02 \x02(\v2\x13.SandboxProfileSpecR\x04spec\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\x03 \x02(\x03R\tcreatedAt\"?\n" +
 	"\x14CreateProfileRequest\x12'\n" +
 	"\x04spec\x18\x01 \x02(\v2\x13.SandboxProfileSpecR\x04spec\"B\n" +
 	"\x15CreateProfileResponse\x12)\n" +
-	"\aprofile\x18\x01 \x02(\v2\x0f.SandboxProfileR\aprofile\"2\n" +
-	"\x11GetProfileRequest\x12\x1d\n" +
-	"\n" +
-	"profile_id\x18\x01 \x02(\tR\tprofileId\"?\n" +
+	"\aprofile\x18\x01 \x02(\v2\x0f.SandboxProfileR\aprofile\"'\n" +
+	"\x11GetProfileRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x02(\tR\x04name\"?\n" +
 	"\x12GetProfileResponse\x12)\n" +
 	"\aprofile\x18\x01 \x02(\v2\x0f.SandboxProfileR\aprofile\"\xe3\x01\n" +
 	"\x13ListProfilesRequest\x12\x1b\n" +
@@ -2615,22 +2622,19 @@ const file_runner_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"k\n" +
 	"\x14ListProfilesResponse\x12+\n" +
 	"\bprofiles\x18\x01 \x03(\v2\x0f.SandboxProfileR\bprofiles\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"5\n" +
-	"\x14DeleteProfileRequest\x12\x1d\n" +
-	"\n" +
-	"profile_id\x18\x01 \x02(\tR\tprofileId\"\x17\n" +
-	"\x15DeleteProfileResponse\"\x8b\x01\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"*\n" +
+	"\x14DeleteProfileRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x02(\tR\x04name\"\x17\n" +
+	"\x15DeleteProfileResponse\"\x80\x01\n" +
 	"\aSandbox\x12\x1d\n" +
 	"\n" +
 	"sandbox_id\x18\x01 \x02(\tR\tsandboxId\x12#\n" +
-	"\x05state\x18\x02 \x02(\x0e2\r.SandboxStateR\x05state\x12\x1d\n" +
+	"\x05state\x18\x02 \x02(\x0e2\r.SandboxStateR\x05state\x12\x12\n" +
+	"\x04name\x18\x03 \x02(\tR\x04name\x12\x1d\n" +
 	"\n" +
-	"profile_id\x18\x03 \x02(\tR\tprofileId\x12\x1d\n" +
-	"\n" +
-	"created_at\x18\x04 \x02(\x03R\tcreatedAt\"q\n" +
-	"\x13ClaimSandboxRequest\x12\x1f\n" +
-	"\n" +
-	"profile_id\x18\x01 \x01(\tH\x00R\tprofileId\x12/\n" +
+	"created_at\x18\x04 \x02(\x03R\tcreatedAt\"f\n" +
+	"\x13ClaimSandboxRequest\x12\x14\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x12/\n" +
 	"\aprofile\x18\x02 \x01(\v2\x13.SandboxProfileSpecH\x00R\aprofileB\b\n" +
 	"\x06target\":\n" +
 	"\x14ClaimSandboxResponse\x12\"\n" +
@@ -2639,14 +2643,13 @@ const file_runner_proto_rawDesc = "" +
 	"\n" +
 	"sandbox_id\x18\x01 \x02(\tR\tsandboxId\"8\n" +
 	"\x12GetSandboxResponse\x12\"\n" +
-	"\asandbox\x18\x01 \x02(\v2\b.SandboxR\asandbox\"\x84\x02\n" +
+	"\asandbox\x18\x01 \x02(\v2\b.SandboxR\asandbox\"\xf9\x01\n" +
 	"\x14ListSandboxesRequest\x12\x1b\n" +
 	"\tpage_size\x18\x01 \x01(\rR\bpageSize\x12\x1d\n" +
 	"\n" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\x12O\n" +
-	"\x0elabel_selector\x18\x03 \x03(\v2(.ListSandboxesRequest.LabelSelectorEntryR\rlabelSelector\x12\x1d\n" +
-	"\n" +
-	"profile_id\x18\x04 \x01(\tR\tprofileId\x1a@\n" +
+	"\x0elabel_selector\x18\x03 \x03(\v2(.ListSandboxesRequest.LabelSelectorEntryR\rlabelSelector\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x1a@\n" +
 	"\x12LabelSelectorEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"g\n" +
@@ -2857,7 +2860,7 @@ func file_runner_proto_init() {
 		(*WriteStdinRequest_Eof)(nil),
 	}
 	file_runner_proto_msgTypes[32].OneofWrappers = []any{
-		(*ClaimSandboxRequest_ProfileId)(nil),
+		(*ClaimSandboxRequest_Name)(nil),
 		(*ClaimSandboxRequest_Profile)(nil),
 	}
 	type x struct{}

@@ -138,6 +138,7 @@ message NetworkSettings {
 // instances of it are kept ready.
 message SandboxProfileSpec {
   required string template_id = 1;
+  optional string name = 13;
   optional string cwd = 2;
   map<string, string> tags = 4;
   map<string, string> env_vars = 5;
@@ -153,9 +154,9 @@ message SandboxProfileSpec {
 }
 
 // SandboxProfile is a created, addressable SandboxProfileSpec. Sandboxes are
-// always claimed against a profile_id, never against a raw spec.
+// always claimed against a name, never against a raw spec.
 message SandboxProfile {
-  required string profile_id = 1;
+  required string name = 1;
   required SandboxProfileSpec spec = 2;
   required int64 created_at = 3;
 }
@@ -169,7 +170,7 @@ message CreateProfileResponse {
 }
 
 message GetProfileRequest {
-  required string profile_id = 1;
+  required string name = 1;
 }
 
 message GetProfileResponse {
@@ -188,7 +189,7 @@ message ListProfilesResponse {
 }
 
 message DeleteProfileRequest {
-  required string profile_id = 1;
+  required string name = 1;
 }
 
 message DeleteProfileResponse {
@@ -207,17 +208,17 @@ enum SandboxState {
 message Sandbox {
   required string sandbox_id = 1;
   required SandboxState state = 2;
-  required string profile_id = 3;
+  required string name = 3;
   required int64 created_at = 4;
 }
 
 // ClaimSandboxRequest claims a sandbox. The profile can already exist
-// (claim by profile_id, the ahead-of-time path) or be created on demand by
+// (claim by name, the ahead-of-time path) or be created on demand by
 // supplying its spec inline — either way the result is a sandbox bound to a
 // profile.
 message ClaimSandboxRequest {
   oneof target {
-    string profile_id = 1;
+    string name = 1;
     SandboxProfileSpec profile = 2;
   }
 }
@@ -238,7 +239,7 @@ message ListSandboxesRequest {
   optional uint32 page_size = 1;
   optional string page_token = 2;
   map<string, string> label_selector = 3;
-  optional string profile_id = 4;
+  optional string name = 4;
 }
 
 message ListSandboxesResponse {
